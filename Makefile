@@ -31,6 +31,5 @@ fclean: clean
 
 re: fclean all
 
-test: cc main.c libasm.a
 
 .PHONY: all clean fclean re
