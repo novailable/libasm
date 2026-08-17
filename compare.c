@@ -14,7 +14,7 @@ static double diff_ns(struct timespec a, struct timespec b)
 
 int main(void)
 {
-    const char *s = "Hi hello this";
+    const char *s = "Hi this is test testsetsetstste";
     const long iterations = 10000000;
     struct timespec start, end;
     volatile size_t result = 0;

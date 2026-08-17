@@ -12,6 +12,24 @@ static double diff_ns(struct timespec a, struct timespec b)
            (b.tv_nsec - a.tv_nsec);
 }
 
+#define BENCH(fn, arg, iters) ( \
+    {   \
+        struct timespec _s, _e; \
+        clock_gettime(CLOCK_MONOTONIC_RAW, &_s);    \
+        for (long _i = 0; _i < (iters); _i++)   \
+            (fn)(arg);   \
+        clock_gettime(CLOCK_MONOTONIC_RAW, &_e);    \
+        (long)diff_ns(_s, _e);  \
+    }   \
+)
+
+#define CHECK(fn1, fn2, in)  (\
+    {   \
+        printf("ft_strlen time\t: %.0ld ns\n", BENCH(fn1, in, 100000));  \
+        printf("strlen time\t: %.0ld ns\n", BENCH(fn2, in, 100000));  \
+    }   \
+)
+
 long	compute_timestamp(void (*func)(), char *argv)
 {
 	struct timespec start, end;
@@ -27,11 +45,13 @@ long	compute_timestamp(void (*func)(), char *argv)
 	return (diff_ns(start, end));
 }
 
+
 int	main(void)
 {
-    const char *s = "Hello world this is a test string";
-
-	printf("ft_strlen time\t: %.0ld ns\n", compute_timestamp(ft_strlen, s));
-    printf("strlen time\t: %.0ld ns\n", compute_timestamp(strlen, s));   
+    const char *in = "Hello world this is a test string";
+    
+    if (ft_strlen(in) != strlen(in))
+        return (printf("ft_strlen failed!"), 1);
+	CHECK(ft_strlen, strlen, in);
     return 0;
 }
